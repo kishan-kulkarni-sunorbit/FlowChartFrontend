@@ -11,13 +11,12 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-const FlowchartPreview = ({ nodes, edges }) => {
-  // Color-coded parent (green) and child (red) nodes
+const FlowchartPreview = ({ nodes, edges, fullScreen }) => {
   const [flowNodes, setFlowNodes, onNodesChange] = useNodesState(
     nodes.map((node) => ({
       ...node,
       style: {
-        backgroundColor: node.parent_node_key ? '#f8d7da' : '#d1e7dd', // red for child, green for parent
+        backgroundColor: node.parent_node_key ? '#f8d7da' : '#d1e7dd',
         border: '1px solid #888',
         padding: 10,
       },
@@ -57,11 +56,8 @@ const FlowchartPreview = ({ nodes, edges }) => {
 
       try {
         await axios.patch('http://localhost:5001/api/flowchart/update-node-position', {
-          node_key: node.id, // node_key from your DB
-          position: {
-            x: node.position.x,
-            y: node.position.y,
-          },
+          node_key: node.id,
+          position: node.position,
         });
       } catch (err) {
         console.error('❌ Failed to update node position:', err.message);
@@ -71,7 +67,7 @@ const FlowchartPreview = ({ nodes, edges }) => {
   );
 
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={{ height: fullScreen ? '100vh' : 300, width: '100%' }}>
       <ReactFlow
         nodes={flowNodes}
         edges={flowEdges}

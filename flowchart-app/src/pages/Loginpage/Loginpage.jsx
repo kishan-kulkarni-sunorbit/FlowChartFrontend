@@ -8,6 +8,7 @@ import {
   Link,
   Paper,
   CircularProgress,
+  Divider,
 } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,6 @@ const Loginpage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -43,8 +43,6 @@ const Loginpage = () => {
       if (data.token) {
         setSuccess('Login successful!');
         localStorage.setItem('token', data.token);
-
-        // ✅ redirect after login
         navigate('/flowcharts');
       } else {
         setError(data.message || 'Login failed');
@@ -62,23 +60,21 @@ const Loginpage = () => {
       sx={{
         width: '100vw',
         height: '100vh',
-        backgroundColor: '#f0f2f5',
+        background: 'linear-gradient(to right, #74ebd5, #ACB6E5)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        m: 0,
-        p: 0,
+        overflow: 'hidden',
       }}
     >
       <Paper
-        elevation={6}
+        elevation={8}
         sx={{
-          width: '100%',
-          maxWidth: 400,
-          p: 4,
-          borderRadius: 3,
-          backgroundColor: '#fff',
-          mx: 2,
+          maxWidth: 420,
+          width: '90%',
+          p: 5,
+          borderRadius: 4,
+          backgroundColor: 'white',
         }}
       >
         <Box
@@ -91,8 +87,21 @@ const Loginpage = () => {
             gap: 2,
           }}
         >
-          <Typography variant="h4" component="h1" align="center" gutterBottom>
-            Login
+          <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            sx={{ fontWeight: 'bold', color: '#1976d2' }}
+          >
+            🔐 Secure Login
+          </Typography>
+
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ color: 'text.secondary', mb: 1 }}
+          >
+            Welcome back! Please log in to your account.
           </Typography>
 
           {error && <Alert severity="error">{error}</Alert>}
@@ -106,6 +115,7 @@ const Loginpage = () => {
             required
             autoComplete="username"
             fullWidth
+            variant="outlined"
           />
           <TextField
             label="Password"
@@ -115,6 +125,7 @@ const Loginpage = () => {
             required
             autoComplete="current-password"
             fullWidth
+            variant="outlined"
           />
 
           <Button
@@ -123,18 +134,41 @@ const Loginpage = () => {
             size="large"
             fullWidth
             disabled={loading}
+            sx={{
+              backgroundColor: '#1976d2',
+              '&:hover': {
+                backgroundColor: '#115293',
+              },
+              transition: 'all 0.3s ease-in-out',
+              fontWeight: 600,
+              py: 1.5,
+            }}
           >
-            {loading ? <CircularProgress size={24} /> : 'Log In'}
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'Log In'}
           </Button>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
-            <Link href="/forgot-password" variant="body2">
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mt: 1,
+              fontSize: '0.9rem',
+            }}
+          >
+            <Link href="/forgot-password" underline="hover">
               Forgot password?
             </Link>
-            <Link href="/signup" variant="body2">
-              Sign up
+            <Link href="/signup" underline="hover">
+              Create account
             </Link>
           </Box>
+
+          <Divider sx={{ my: 2 }}>or</Divider>
+
+          <Typography variant="body2" align="center" sx={{ color: 'gray' }}>
+            Need help? <Link href="mailto:support@example.com">Contact support</Link>
+          </Typography>
         </Box>
       </Paper>
     </Box>
